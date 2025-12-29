@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"gravetat",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"gravetat",
+  "parent":{
+    "name":"code",
+    "path":"folders/code.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
