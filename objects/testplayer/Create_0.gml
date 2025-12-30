@@ -10,7 +10,9 @@ running = false;
 jumping = false;
 inground = true;
 jumpcut = false;
+isgrounded = true;
 
 MaxJumpHeight = 0;
 step = 0;
 atraction = 0;
+xspd = 0

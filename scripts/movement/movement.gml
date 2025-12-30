@@ -3,6 +3,7 @@
 function movement(){
     var jumphold = keyboard_check(vk_up);
     var jumpinput = keyboard_check_pressed(vk_up);
+	var subPixel = .5;
     rightkey = keyboard_check(vk_right);
     leftkey = keyboard_check(vk_left);
     
@@ -21,17 +22,12 @@ function movement(){
         running = false;
     }
 
-    var isgrounded = place_meeting(x, y + 1, tierra);
+    var isgrounded = place_meeting(x, y + 0.5, tierra);
     //gravetat
     if (isgrounded)
     {
         inground = true;
         atraction = 0;
-
-        while (place_meeting(x, y, tierra))
-        {
-            y -= 1;
-        }
     }
     else 
     {
@@ -52,6 +48,7 @@ function movement(){
     if (jumpinput && inground)
     {
         jumping = true;
+		inground = false;
     }
     
     //condicions per portar a terme o parar el salt
@@ -62,14 +59,14 @@ function movement(){
         {
             //cambiar funcionament de height
             MaxJumpHeight += 0.5;
-            y-= global.player.NORMAL_JUMP;
+            move_y_safe(-global.player.NORMAL_JUMP);
         }
         //extensio salt
         else
         {
             //cambiar funcionament de height
             MaxJumpHeight += 1;
-            y-= global.player.EXTENDED_JUMP;        
+            move_y_safe(-global.player.EXTENDED_JUMP);  
             movementspeed = global.player.EXTENDED_JUMP_SPEED;
         }
     }
@@ -83,8 +80,31 @@ function movement(){
 
     //calcul velocitat
     finalmovement = movementdirection * movementspeed;
-
+		
     //aplicar canvis x,y
-    x += finalmovement;
-    y += atraction;
+    move_x_safe(finalmovement);
+    move_y_safe(atraction);
+	
+	//no suma decimals tinc que cambiar aquesta metodologia per un while que faci el mateix que aquest repeat, pero que vagi fent
+	//-1 directament a la variable que tingui el valor donat per "finalmovementanalizer", en el return s'haura de tornar el valor d'aquella variable
+	//a 0
+	function move_y_safe(finalmovementanalizery) 
+	{
+	    var sy = sign(finalmovementanalizery); //saber direccio moviment
+	    repeat abs(finalmovementanalizery)
+		{
+	        if (!place_meeting(x, y + sy, tierra)) y += sy;
+	        else return;
+	    }
+	}
+	
+	function move_x_safe(finalmovementanalizerx) 
+	{
+	    var sx = sign(finalmovementanalizerx);
+	    repeat abs(finalmovementanalizerx) 
+		{
+	        if (!place_meeting(x + sx, y, tierra)) x += sx;
+	        else return;
+	    }
+	}
 }
